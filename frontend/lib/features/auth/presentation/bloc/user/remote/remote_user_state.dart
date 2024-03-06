@@ -1,27 +1,29 @@
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:rental/features/auth/domain/entities/user.dart';
 
 abstract class RemoteUserState extends Equatable {
-  final UserEntity? userEntity;
-  final DioException? dioException;
+  @override
+  List<Object> get props => [];
+}
 
-  const RemoteUserState({this.userEntity, this.dioException});
+class Empty extends RemoteUserState {}
+
+class Loading extends RemoteUserState {}
+
+class Loaded extends RemoteUserState {
+  final String access_token;
+  final String status;
+
+  Loaded({required this.access_token, required this.status});
 
   @override
-  List<Object?> get props => [userEntity, dioException];
+  List<Object> get props => [access_token, status];
 }
 
-class RemoteUserLoading extends RemoteUserState {
-  const RemoteUserLoading();
-}
+class Error extends RemoteUserState {
+  final String message;
 
-class RemoteUserDone extends RemoteUserState {
-  const RemoteUserDone({required UserEntity userEntity})
-      : super(userEntity: userEntity);
-}
+  Error({required this.message});
 
-class RemoteUserError extends RemoteUserState {
-  const RemoteUserError({required DioException dioException})
-      : super(dioException: dioException);
+  @override
+  List<Object> get props => [message];
 }

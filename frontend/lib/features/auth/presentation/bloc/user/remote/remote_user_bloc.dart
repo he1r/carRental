@@ -1,23 +1,27 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
-import 'package:rental/core/resources/data_state.dart';
 import 'package:rental/features/auth/domain/usecases/get_user.dart';
 import 'package:rental/features/auth/presentation/bloc/user/remote/remote_user_event.dart';
 import 'package:rental/features/auth/presentation/bloc/user/remote/remote_user_state.dart';
 
-class RemoteUserBlock extends Bloc<RemoteUserEvent, RemoteUserState> {
-  final GetUserUseCase _getUserUseCase;
-  RemoteUserBlock(this._getUserUseCase) : super(const RemoteUserLoading()) {
-    on<GetUser>(onGetUser);
-  }
+const String SERVER_FAILURE_MESSAGE = 'Server Failure';
+const String CACHE_FAILURE_MESSAGE = 'Cache Failure';
 
-  Future<void> onGetUser(
-      GetUser event, Emitter<RemoteUserState> emitter) async {
-    final dataState = await _getUserUseCase(null);
+class RemoteUserBloc extends Bloc<RemoteUserEvent, RemoteUserState> {
+  final GetUser userLogin;
 
-    if (dataState is DataSuccess && dataState.data != null) {
-      emitter(RemoteUserDone(userEntity: dataState.data!));
-    } else if (dataState is DataFailed) {
-      emitter(RemoteUserError(dioException: dataState.error!));
-    }
+  RemoteUserBloc(
+    RemoteUserState initialState, {
+    required GetUser getUser,
+  })  : userLogin = getUser,
+        super(initialState);
+
+  RemoteUserState get initialState => Empty();
+
+  Stream<RemoteUserState> mapEventToState(
+    RemoteUserEvent event,
+  ) async* {
+    yield Loading();
   }
 }

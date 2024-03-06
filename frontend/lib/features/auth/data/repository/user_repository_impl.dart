@@ -11,10 +11,11 @@ class UserRepositoryImpl extends UserRepository {
   UserRepositoryImpl(this._userLoginService);
 
   @override
-  Future<DataState<UserEntity>> getUser() async {
+  Future<DataState<UserEntity>> getUser(
+      String accountNumber, String password) async {
     try {
-      final httpResponse =
-          await _userLoginService.login(accountNumber: '', password: '');
+      final httpResponse = await _userLoginService.login(
+          accountNumber: accountNumber, password: password);
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return DataSuccess(httpResponse.data);

@@ -19,19 +19,6 @@ class Login extends StatelessWidget {
   }
 
   _buildBody() {
-    return BlocBuilder<RemoteUserBlock, RemoteUserState>(
-      builder: (_, state) {
-        if (state is RemoteUserLoading) {
-          return const CircularProgressIndicator();
-        }
-        if (state is RemoteUserDone) {
-          return const Center(child: Icon(Icons.refresh));
-        }
-        if (state is RemoteUserError) {
-          return const Text('There was an error with the endpoint');
-        }
-        return Container();
-      },
-    );
+    return const Text('There was an error with the endpoint');
   }
 }
